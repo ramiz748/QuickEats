@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Checkout — QuickEats{% endblock %}
+{% block content %}
+
+<section style="padding:50px 0">
+    <div class="container">
+        <div class="section-tag">Checkout</div>
+        <h2 class="section-title">Almost there</h2>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="form-card">
+                    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:1.5rem">
+                        Delivery details
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Delivery Address</label>
+                            {{ form.address }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Phone Number</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Payment Method</label>
+                            <div class="mt-2 d-flex flex-column gap-2">
+                                {% for radio in form.payment_method %}
+                                <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid #ebebeb;border-radius:12px;cursor:pointer;transition:border-color 0.2s">
+                                    {{ radio.tag }}
+                                    <span style="font-weight:500;font-size:0.95rem">{{ radio.choice_label }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if form.errors %}
+                        <div class="alert alert-danger">Please fix the errors above.</div>
+                        {% endif %}
+                        <button type="submit" class="btn-primary-custom d-block text-center w-100">
+                            Place Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="summary-card">
+                    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:1.2rem">
+                        Your order
+                    </div>
+                    {% for item in cart_items %}
+                    <div class="d-flex justify-content-between mb-2" style="font-size:0.9rem">
+                        <span style="color:#1c1c1e">{{ item.food_item.name }} <span style="color:#8e8e93">x{{ item.quantity }}</span></span>
+                        <span style="font-weight:600">Rs.{{ item.get_subtotal }}</span>
+                    </div>
+                    {% endfor %}
+                    <hr style="border-color:#ebebeb;margin:1rem 0">
+                    <div class="d-flex justify-content-between">
+                        <span style="font-weight:700">Total</span>
+                        <span style="font-weight:700;color:#e8572a;font-size:1.2rem">Rs.{{ cart.get_total }}</span>
+                    </div>
+                    <div style="margin-top:1rem;padding:12px;background:#e8f5e9;border-radius:12px;font-size:0.85rem;color:#2e7d32">
+                        <i class="bi bi-truck"></i> Free delivery on your order
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

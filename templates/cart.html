@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Your Cart — QuickEats{% endblock %}
+{% block content %}
+
+<section style="padding:50px 0">
+    <div class="container">
+        <div class="section-tag">Cart</div>
+        <h2 class="section-title">Your bag</h2>
+
+        {% if cart_items %}
+        <div class="row g-4">
+            <div class="col-lg-8">
+                {% for item in cart_items %}
+                <div class="cart-item-card d-flex align-items-center gap-3">
+                    <div style="width:60px;height:60px;border-radius:12px;background:#fff3ef;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">
+                        {% if item.food_item.category.name == 'Burgers' %}🍔
+                        {% elif item.food_item.category.name == 'Pizza' %}🍕
+                        {% elif item.food_item.category.name == 'Biryani' %}🍛
+                        {% elif item.food_item.category.name == 'Drinks' %}🥤
+                        {% elif item.food_item.category.name == 'Desserts' %}🍰
+                        {% else %}🍽️
+                        {% endif %}
+                    </div>
+                    <div style="flex:1">
+                        <div class="cart-item-name">{{ item.food_item.name }}</div>
+                        <div style="font-size:0.85rem;color:#8e8e93">Rs.{{ item.food_item.price }} each</div>
+                    </div>
+                    <form method="post" action="{% url 'update_cart' item.id %}" class="d-flex align-items-center gap-2">
+                        {% csrf_token %}
+                        <button name="action" value="decrease" class="qty-btn">−</button>
+                        <span style="font-weight:600;min-width:20px;text-align:center">{{ item.quantity }}</span>
+                        <button name="action" value="increase" class="qty-btn">+</button>
+                    </form>
+                    <div style="font-weight:700;color:#e8572a;min-width:80px;text-align:right">
+                        Rs.{{ item.get_subtotal }}
+                    </div>
+                    <a href="{% url 'remove_from_cart' item.id %}" onclick="return confirm('Remove this item?')" style="color:#8e8e93;text-decoration:none;margin-left:8px">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:1.2rem">
+                        Order summary
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" style="font-size:0.95rem">
+                        <span style="color:#8e8e93">Subtotal</span>
+                        <span>Rs.{{ cart.get_total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" style="font-size:0.95rem">
+                        <span style="color:#8e8e93">Delivery</span>
+                        <span style="color:#2e7d32;font-weight:600">Free</span>
+                    </div>
+                    <hr style="border-color:#ebebeb">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span style="font-weight:700">Total</span>
+                        <span style="font-weight:700;color:#e8572a;font-size:1.2rem">Rs.{{ cart.get_total }}</span>
+                    </div>
+                    <a href="{% url 'checkout' %}" class="btn-primary-custom d-block text-center">
+                        Proceed to Checkout
+                    </a>
+                    <a href="{% url 'menu' %}" style="display:block;text-align:center;margin-top:12px;color:#8e8e93;font-size:0.9rem;text-decoration:none">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="text-center py-5">
+            <div style="font-size:5rem">🛍️</div>
+            <h4 style="color:#8e8e93;margin-top:1rem">Your bag is empty</h4>
+            <p style="color:#8e8e93;font-size:0.9rem">Add some delicious items from our menu</p>
+            <a href="{% url 'menu' %}" class="btn-primary-custom mt-3 d-inline-block">Browse Menu</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
