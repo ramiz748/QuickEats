@@ -86,5 +86,6 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/menu/'
 LOGOUT_REDIRECT_URL = '/'
 
-RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
-RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
+# Razorpay integration prepared but not yet active
+# RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
+# RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
