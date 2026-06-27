@@ -33,12 +33,16 @@ class Cart(models.Model):
         return f"Cart of {self.user.username}"
 
     def get_total(self):
-        return sum(item.get_subtotal() for item in self.cart_items.all())
+        return sum(
+            item.get_subtotal()
+            for item in self.cart_items.select_related('food_item').all()
+        )
 
     def get_item_count(self):
-        return sum(item.quantity for item in self.cart_items.all())
-
-
+        return sum(
+            item.quantity
+            for item in self.cart_items.select_related('food_item').all()
+        )
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
     food_item = models.ForeignKey(FoodItem, on_delete=models.CASCADE)
