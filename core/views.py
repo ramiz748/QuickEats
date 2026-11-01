@@ -120,7 +120,7 @@ def update_cart(request, item_id):
 @login_required
 def checkout_view(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_items = cart.cart_items.all()
+    cart_items = cart.cart_items.select_related('food_item')
 
     if not cart_items.exists():
         messages.warning(request, 'Your cart is empty.')
